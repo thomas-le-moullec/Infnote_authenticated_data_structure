@@ -1,3 +1,4 @@
+import math
 from enum import Enum
 import hashlib
 
@@ -19,6 +20,44 @@ class Encode:
 class MtTools:
     def __init__(self):
         pass
+
+    @staticmethod
+    def get_max_level(leaves_nbr):
+        if leaves_nbr == 0:
+            return 0
+        """
+        Get the number of levels in our tree based in the number of leaves
+        :param leaves_nbr: Leaves Number in the tree
+        :return: Number of levels, rounded
+        """
+        return int(math.log(leaves_nbr, 2) + 0.5)
+
+    @staticmethod
+    def get_nodes_nbr_on_level(level):
+        """
+        :param level: Specific level
+        :return: Return the number of nodes on a specific level
+        """
+        return math.pow(level, 2)
+
+    @staticmethod
+    def get_nodes_nbr_until_level(level):
+        """
+        Method to give the number of nodes until a specific level is reached.
+        :param level: specific level
+        :return: Number of nodes
+        """
+        result = math.pow(level + 1, 2) - 1
+        return result
+
+    @staticmethod
+    def get_total_nbr_of_nodes(leaves_nbr):
+        """
+        :param leaves_nbr: Number of leaves inserted in the tree
+        :return: return the total number of nodes - hashes in the tree
+        """
+        nbr_nodes = pow(2, math.log(leaves_nbr, 2) + 1) - 1
+        return round(nbr_nodes)
 
     @staticmethod
     def is_right_node(index):
