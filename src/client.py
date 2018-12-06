@@ -1,4 +1,4 @@
-from src.mt_tools import MtTools
+from src.mt_tools import MtTools, Encode, Enum
 
 
 class Client:
@@ -10,13 +10,22 @@ class Client:
     def _set_nbr_lvl(self):
         self.nbr_lvl = MtTools.get_max_level(self.nbr_leaves)
 
-    def _check_nth_post(self, index):
+    def _check_nth_post(self, index, hash_post):
         new_hashes = []
+        if index == 0:
+            new_hashes.append({0: hash_post})
+            return new_hashes
         while index > 0:
             index -= 1
-            self.nbr_leaves = (self.nbr_leaves - 1) / 2
+            self.nbr_leaves = (self.nbr_leaves - 1) / 2 + 0.5
             index = index % self.nbr_leaves
-            # Calculate new hash and store it. self.proof_hashes.append({MtTools.get_sibling_pos(index): hash_post})
+            """if MtTools.is_right_node(index):
+                new_hashes.append(
+                    {MtTools.get_sibling_pos(index): Encode.sha256(self.proof_hashes[index] + hash_post)})
+            else:
+                new_hashes.append(
+                    {MtTools.get_sibling_pos(index): Encode.sha256(self.proof_hashes[index] + hash_post)})"""
+
         return new_hashes
 
     def _store_proof_hashes(self, hash_post):
@@ -28,7 +37,7 @@ class Client:
         """
         # with nbr_leaves we know how many leaves we have,
         # so we know how many level we have and how many leaves per level
-        # We are looking to find the siblings of the potential last node, basically fake an insertion.
+        # We are looking to find the siblings of the potential last node
         # steps:
         # 0) Found the level and index where to start for the new node.
         # 1) Loop through levels starting by the correct level and index found before
@@ -36,14 +45,17 @@ class Client:
         # 3) Check if the node is an odd end node,
         #    in this case we should go to the next level and divide index_on_lvl by 2.
         # 4) Append in proof_hashes the value of the position and the value of the sibling
+        self.nbr_leaves += 1
         self._set_nbr_lvl()
-        index = self.nbr_leaves  # We want to add the post at the end of the tree
-        self.proof_hashes = self._check_nth_post(index)
+        index = self.nbr_leaves -1  # We want to add the post at the end of the tree
+        self.proof_hashes = self._check_nth_post(index, hash_post)
+        self.proof_hashes = []
+        print("We are storing this hashes in Client:"+str(self.proof_hashes))
 
     def add_post(self, hash_post, merkle_root):
         print("Current Stored hash:"+str(self.proof_hashes)+" Merkle root to achieve:"+str(merkle_root)
               + "hash_post to check:"+str(hash_post))
         # Store the correct hashes in proof_hashes
         result = MtTools.validate_proof(self.proof_hashes, hash_post, merkle_root)
-        self._store_proof_hashes(hash_post)
+        self._store_proof_hashes(hash_post)  # Anticipate the next post insertion
         return result

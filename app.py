@@ -95,6 +95,7 @@ def two_full_node_demo(server1, server2):
     else:
         print("Full Node 1 has not accepted post:'" + wrong_post + "' - This is the correct logic")
 
+
 def test_server(serverFullNode):
     server_simple_insertion_and_reset(serverFullNode)  # Insert 3 posts, display the tree and reset it.
     server_demo_merkle_root(serverFullNode)
@@ -105,20 +106,19 @@ def test_server(serverFullNode):
     two_full_node_demo(serverFullNode, new_server)
 
 
-def test_client_server(client, server):
+def test_client_server(clientLightNode, serverFullNode):
     # Peer just added a new post
     first_message_hash = Encode.sha256("a")
-    server.mt.update_tree(first_message_hash)
+    serverFullNode.mt.update_tree(first_message_hash)
     # client check validity of data within its own 'light merkle tree'
-    print(str(client.add_post(first_message_hash, server.mt.get_merkle_root())))
-
+    print(str(clientLightNode.add_post(first_message_hash, serverFullNode.mt.get_merkle_root())))
     second_message_hash = Encode.sha256("b")
-    server.mt.update_tree(second_message_hash)
-    print(str(client.add_post(second_message_hash, server.mt.get_merkle_root())))
+    serverFullNode.mt.update_tree(second_message_hash)
+    print(str(clientLightNode.add_post(second_message_hash, serverFullNode.mt.get_merkle_root())))
 
 
 if __name__ == '__main__':
-    client = client.Client()  # Light Node
+    clientLightNode = client.Client()  # Light Node
     serverFullNode = server.Server()  # Full Node
-    test_server(serverFullNode)  # Test posts insertion within the server
-    #test_client_server(client, serverFullNode)  # Test the data validation logic between client and server
+    #test_server(serverFullNode)  # Test posts insertion within the server
+    #test_client_server(clientLightNode, serverFullNode)  # Test the data validation logic between client and server

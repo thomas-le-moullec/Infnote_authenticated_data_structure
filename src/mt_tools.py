@@ -133,6 +133,7 @@ class MtTools:
             sibling = proof[Position.RIGHT]
             proof_hash = hash_func(target_hash + sibling)
         else:
+            print("Proof:"+str(proof))
             sibling = proof[Position.LEFT]
             proof_hash = hash_func(sibling + target_hash)
         return proof_hash
