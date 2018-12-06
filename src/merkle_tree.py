@@ -101,7 +101,6 @@ class MerkleTree:
         """
         new_level = []
         # Group two nodes, the two futures parents
-        print("last_height before:"+str(last_height))
         for left, right in zip(last_height[0:nbr_leaves_lvl:2], last_height[1:nbr_leaves_lvl:2]):
             new_level.append(self.hash_function(left + right))
         if solo_leaf is not None:  # promote the solo leaf to the next level.
@@ -136,13 +135,13 @@ class MerkleTree:
         if self.get_leaf_nbr() > 0:
             # Push the last added leaves to the tree.
             self.tree = [self.leaves, ]
-            print("Leaves: " + str(self.leaves))
+            # print("Leaves: " + str(self.leaves))
             # Creating the children for each level until root is reached
             while len(self.tree[0]) > 1:
                 self._create_next_height()
-        print("-----")
-        print("Final Height :"+str(self.tree))
-        print("-----")
+        # print("-----")
+        # print("Final Height :"+str(self.tree))
+        # print("-----")
         self.is_built = True
 
     def get_merkle_root(self):

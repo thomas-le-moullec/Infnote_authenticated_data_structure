@@ -152,11 +152,10 @@ class MtTools:
         """
         if hash_it:
             target_hash = Encode.sha256(target_hash)
+        proof_hash = target_hash
         print("Path in Validate proof:" + str(proof_hashes))
         if len(proof_hashes) == 0:
             return target_hash == merkle_root
-        proof_hash = target_hash
         for proof in proof_hashes:
             proof_hash = MtTools.get_proof_hash_by_sibling(proof, proof_hash)
-
         return proof_hash == merkle_root

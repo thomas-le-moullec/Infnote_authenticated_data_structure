@@ -9,10 +9,10 @@ class Server:
     def reset_data(self):
         self.mt.reset_tree()
 
-    def add_post(self, data, merkle_root):
-        self.mt.update_tree(data)
+    def add_post(self, data, merkle_root, hash_it=False):
+        self.mt.update_tree(data, hash_it)
         proof_hashes = self.mt.get_proof_by_index(self.mt.get_leaf_nbr() - 1)
-        return MtTools.validate_proof(proof_hashes, data, merkle_root)
+        return MtTools.validate_proof(proof_hashes, data, merkle_root, hash_it)
 
     def app_posts(self, data, merkle_root):
         for post in data:
