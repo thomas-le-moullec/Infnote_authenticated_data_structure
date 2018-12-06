@@ -33,6 +33,23 @@ class MtTools:
         return int(math.log(leaves_nbr, 2) + 0.5)
 
     @staticmethod
+    def get_level_by_index(index, total_leaves_nbr):
+        """
+        0 if the index of the merkle root. If index == 0 you reached the good level.
+        Else you need to obtain 2 subtrees by the division and update the number of nodes.
+        :param index: Index that we are looking for
+        :param total_leaves_nbr: Total number of leaves in the tree
+        :return: specific level for a specific index in a tree
+        """
+        level = 0
+        while index > 0:
+            index -= 1
+            total_leaves_nbr = (total_leaves_nbr - 1) / 2
+            index = index % total_leaves_nbr
+            level += 1
+        return level
+
+    @staticmethod
     def get_nodes_nbr_on_level(level):
         """
         :param level: Specific level

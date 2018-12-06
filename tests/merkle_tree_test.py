@@ -1,4 +1,6 @@
 import unittest
+from math import floor, log
+
 from src import merkle_tree, mt_tools
 from resources import messages_example, transactions_example
 import random
@@ -103,6 +105,12 @@ class MerkleTreeTests(unittest.TestCase):
             path = mt.get_proof_by_index(secure_random)
             self.assertFalse(mt_tools.MtTools.validate_proof(path, false_post, mt.get_merkle_root()))
 #            self.assertEqual(mt_tools.MtTools.get_total_nbr_of_nodes(mt.get_leaf_nbr()), tree_len)
+
+    def test_find_level_by_index(self):
+        mt = merkle_tree.MerkleTree()
+        mt.update_tree(messages_example.THREE_DATA, True)
+        level = floor(log(mt.get_leaf_nbr(), 2))
+        self.assertEqual(level, mt_tools.MtTools.get_level_by_index(mt.get_leaf_nbr(), mt.get_leaf_nbr()))
 
 
 if __name__ == "__main__":
